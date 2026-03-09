@@ -627,3 +627,9 @@ print(f"total_tokens_M:   {total_tokens / 1e6:.1f}")
 print(f"num_steps:        {step}")
 print(f"num_params_M:     {num_params / 1e6:.1f}")
 print(f"depth:            {DEPTH}")
+
+# Save checkpoint for inference experiments (run once, then remove these lines)
+if not os.path.exists("model.pt"):
+    ckpt = {'config': asdict(config), 'state_dict': {k: v.cpu() for k, v in model.state_dict().items()}}
+    torch.save(ckpt, "model.pt")
+    print(f"Saved checkpoint to model.pt")
