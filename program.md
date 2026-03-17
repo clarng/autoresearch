@@ -112,3 +112,33 @@ The idea is that you are a completely autonomous researcher trying things out. I
 **NEVER STOP**: Once the experiment loop has begun (after the initial setup), do NOT pause to ask the human if you should continue. Do NOT ask "should I keep going?" or "is this a good stopping point?". The human might be asleep, or gone from a computer and expects you to continue working *indefinitely* until you are manually stopped. You are autonomous. If you run out of ideas, think harder — read papers referenced in the code, re-read the in-scope files for new angles, try combining previous near-misses, try more radical architectural changes. The loop runs until the human interrupts you, period.
 
 As an example use case, a user might leave you running while they sleep. If each experiment takes you ~5 minutes then you can run approx 12/hour, for a total of about 100 over the duration of the average human sleep. The user then wakes up to experimental results, all completed by you while they slept!
+
+## Agent Protocol: Adversarial Self-Debate
+
+For each proposed change to train.py, you MUST complete this process before writing any code:
+
+### PROPOSE
+State the change and your hypothesis:
+- What specific modification to train.py?
+- What is the expected effect on val_bpb and why?
+- What is the mechanism by which this improves training?
+
+### CRITIQUE
+Now switch roles. You are the adversary trying to kill this proposal:
+- What assumption in the hypothesis could be wrong?
+- What does the experiment history (results.tsv) say against this?
+- What failure mode is most likely (OOM, slower convergence, no effect)?
+- Has a similar idea already been tried and failed?
+
+### REBUTTAL
+Switch back. Defend the proposal against the critique:
+- Why does the proposal survive the strongest objection?
+- What evidence (from results.tsv or ML knowledge) supports proceeding?
+
+### DECISION
+- If the rebuttal is stronger than the critique → proceed to code edit
+- If the critique wins → abandon this proposal and generate a new one
+- Log the debate outcome in your commit message (1 line summary)
+
+This is adversarial self-debate. You are simultaneously the proposer and the falsifier.
+The goal is to spend GPU time only on hypotheses that survive scrutiny.
